@@ -11,18 +11,10 @@ import {
   Button,
   Grid,
 } from "@mui/material";
-import * as React from "react";
+import { useSignIn } from "./useSignIn";
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
-
+  const { handleSubmit, signInWithGoogle } = useSignIn();
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -70,6 +62,15 @@ export default function SignIn() {
             sx={{ mt: 3, mb: 2 }}
           >
             Sign In
+          </Button>
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={signInWithGoogle}
+          >
+            Sign With Google
           </Button>
           <Grid container>
             <Grid item>
