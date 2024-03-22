@@ -10,13 +10,24 @@ import {
   Checkbox,
   Button,
   Grid,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
-import { useSignIn } from "./useSignIn";
+import { useAuth } from "../../../hooks/useAuth";
 
-export default function SignIn() {
-  const { handleSubmit, signInWithGoogle } = useSignIn();
+export const SignIn = () => {
+  const { handleSubmit, signInWithGoogle, signInState } = useAuth();
+  if (signInState.loading) {
+    return <CircularProgress />;
+  }
+
   return (
     <Container component="main" maxWidth="xs">
+      {signInState.error && (
+        <Alert translate="yes" severity="error">
+          {signInState.error.message}
+        </Alert>
+      )}
       <CssBaseline />
       <Box
         sx={{
@@ -83,4 +94,4 @@ export default function SignIn() {
       </Box>
     </Container>
   );
-}
+};

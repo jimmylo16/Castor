@@ -1,4 +1,4 @@
-import { SignUp } from "../../components/shared/SignUp";
+import { SignUp } from "../../components/shared/SignUp/SignUp";
 
 export const SignUpPage = () => {
   return <SignUp />;

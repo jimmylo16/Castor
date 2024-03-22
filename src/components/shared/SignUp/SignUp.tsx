@@ -8,20 +8,23 @@ import {
   TextField,
   Button,
   Link,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
+import { useAuth } from "../../../hooks/useAuth";
 
 export const SignUp = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
-
+  const { handleSubmit, signInWithGoogle, signInState } = useAuth();
+  if (signInState.loading) {
+    return <CircularProgress />;
+  }
   return (
     <Container component="main" maxWidth="xs">
+      {signInState.error && (
+        <Alert translate="yes" severity="error">
+          {signInState.error.message}
+        </Alert>
+      )}
       <CssBaseline />
       <Box
         sx={{
@@ -66,6 +69,15 @@ export const SignUp = () => {
             sx={{ mt: 3, mb: 2 }}
           >
             Sign Up
+          </Button>
+          <Button
+            type="button"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            onClick={signInWithGoogle}
+          >
+            Sign With Google
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>
