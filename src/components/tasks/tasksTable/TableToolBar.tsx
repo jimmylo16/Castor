@@ -14,7 +14,8 @@ import { useState } from "react";
 import { TaskForm } from "../taskForm/TaskForm";
 
 export const TableToolbar = (props: TableToolbarProps) => {
-  const { numSelected } = props;
+  const { selected, onDeleteTasks } = props;
+  const numSelected = selected.length;
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -28,6 +29,7 @@ export const TableToolbar = (props: TableToolbarProps) => {
     props.onAddTask(task);
     handleClose();
   };
+
   return (
     <Toolbar
       sx={{
@@ -75,7 +77,7 @@ export const TableToolbar = (props: TableToolbarProps) => {
       )}
       {numSelected > 0 && (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={onDeleteTasks}>
             <DeleteIcon />
           </IconButton>
         </Tooltip>

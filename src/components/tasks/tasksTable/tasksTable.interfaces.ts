@@ -18,8 +18,9 @@ export interface Task {
 }
 
 export interface TableToolbarProps {
-  numSelected: number;
+  selected: string[];
   onAddTask: (task: Task) => void;
+  onDeleteTasks: () => void;
 }
 
 export interface EnhancedTableProps {

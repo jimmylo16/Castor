@@ -9,6 +9,7 @@ import {
   getDocs,
   doc,
   addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { auth, db } from "../../../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -16,7 +17,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 export const useTasksTable = () => {
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Data>("createdAt");
-  const [selected, setSelected] = useState<readonly string[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rows, setRows] = useState<Data[]>([]);
@@ -34,6 +35,16 @@ export const useTasksTable = () => {
       createdAt: new Date(),
     });
     await fetchTasks();
+  };
+
+  const onDeleteTasks = async () => {
+    // delete from firestore
+    setLoading(true);
+    for (const id of selected) {
+      await deleteDoc(doc(db, "tasks", id));
+    }
+    await fetchTasks();
+    setSelected([]);
   };
 
   const fetchTasks = useCallback(async () => {
@@ -79,7 +90,7 @@ export const useTasksTable = () => {
 
   const handleClick = (_event: React.MouseEvent<unknown>, id: string) => {
     const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly string[] = [];
+    let newSelected: string[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -139,5 +150,6 @@ export const useTasksTable = () => {
     rows,
     onAddTask,
     loading,
+    onDeleteTasks,
   };
 };

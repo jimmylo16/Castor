@@ -32,11 +32,16 @@ export default function EnhancedTable() {
     handleChangeRowsPerPage,
     onAddTask,
     loading,
+    onDeleteTasks,
   } = useTasksTable();
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <TableToolbar numSelected={selected.length} onAddTask={onAddTask} />
+        <TableToolbar
+          selected={selected}
+          onAddTask={onAddTask}
+          onDeleteTasks={onDeleteTasks}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
