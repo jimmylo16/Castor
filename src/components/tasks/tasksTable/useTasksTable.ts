@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { stableSort, getComparator } from "./tasksTable.helper";
-import { Order, Data, Task } from "./tasksTable.interfaces";
+import { Order, Data, Task, UpdatedTask } from "./tasksTable.interfaces";
 
 import {
   query,
@@ -10,6 +10,7 @@ import {
   doc,
   addDoc,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { auth, db } from "../../../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -37,6 +38,14 @@ export const useTasksTable = () => {
     await fetchTasks();
   };
 
+  const onEditTask = async (taskId: string, updatedTask: UpdatedTask) => {
+    setLoading(true);
+    const taskRef = doc(db, "tasks", taskId);
+    await updateDoc(taskRef, { ...updatedTask });
+    await fetchTasks();
+    setLoading(false);
+  };
+
   const onDeleteTasks = async () => {
     // delete from firestore
     setLoading(true);
@@ -58,8 +67,9 @@ export const useTasksTable = () => {
         id: doc.id,
         title: task.title,
         description: task.description,
-        state: task.status,
+        status: task.status,
         createdAt: task.createdAt.toDate(),
+        edit: "",
       };
     });
     setRows(tasks);
@@ -88,7 +98,7 @@ export const useTasksTable = () => {
     setSelected([]);
   };
 
-  const handleClick = (_event: React.MouseEvent<unknown>, id: string) => {
+  const handleClick = (id: string) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: string[] = [];
 
@@ -151,5 +161,6 @@ export const useTasksTable = () => {
     onAddTask,
     loading,
     onDeleteTasks,
+    onEditTask,
   };
 };

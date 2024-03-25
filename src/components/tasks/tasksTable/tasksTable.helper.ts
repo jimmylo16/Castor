@@ -1,4 +1,6 @@
+import { SxProps } from "@mui/material";
 import { Data, HeadCell, Order } from "./tasksTable.interfaces";
+import { Theme } from "@mui/system";
 
 export const headCells: readonly HeadCell[] = [
   {
@@ -9,15 +11,15 @@ export const headCells: readonly HeadCell[] = [
   },
   {
     id: "description",
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: "Description",
   },
   {
-    id: "state",
-    numeric: true,
+    id: "status",
+    numeric: false,
     disablePadding: false,
-    label: "State",
+    label: "Status",
   },
   {
     id: "createdAt",
@@ -32,6 +34,23 @@ export const headCells: readonly HeadCell[] = [
     label: "Edit",
   },
 ];
+
+export const style: SxProps<Theme> = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+  gap: 2,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: "10px",
+};
 
 export function getComparator<Key extends keyof Data>(
   order: Order,

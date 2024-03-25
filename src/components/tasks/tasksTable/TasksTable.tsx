@@ -14,7 +14,8 @@ import {
 import { useTasksTable } from "./useTasksTable";
 import { TableToolbar } from "./TableToolBar";
 import { TableHead } from "./TableHead";
-import { Edit } from "@mui/icons-material";
+import { TableActionBtn } from "./TableActionBtn";
+
 export default function EnhancedTable() {
   const {
     selected,
@@ -34,6 +35,7 @@ export default function EnhancedTable() {
     onAddTask,
     loading,
     onDeleteTasks,
+    onEditTask,
   } = useTasksTable();
   return (
     <Box sx={{ width: "100%" }}>
@@ -73,7 +75,6 @@ export default function EnhancedTable() {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -81,7 +82,10 @@ export default function EnhancedTable() {
                       selected={isItemSelected}
                       sx={{ cursor: "pointer" }}
                     >
-                      <TableCell padding="checkbox">
+                      <TableCell
+                        padding="checkbox"
+                        onClick={() => handleClick(row.id)}
+                      >
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
@@ -98,14 +102,15 @@ export default function EnhancedTable() {
                       >
                         {row.title}
                       </TableCell>
-                      <TableCell align="right">{row.description}</TableCell>
-                      <TableCell align="right">{row.state}</TableCell>
+                      <TableCell align="left">{row.description}</TableCell>
+                      <TableCell align="left">{row.status}</TableCell>
                       <TableCell align="right">
                         {row.createdAt.toISOString()}
                       </TableCell>
-                      <TableCell align="right">
-                        <Edit></Edit>
-                      </TableCell>
+                      <TableActionBtn
+                        taskId={row.id}
+                        onEditTask={onEditTask}
+                      ></TableActionBtn>
                     </TableRow>
                   );
                 })

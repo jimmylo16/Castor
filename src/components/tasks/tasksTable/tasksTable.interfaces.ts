@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 export interface HeadCell {
   disablePadding: boolean;
   id: keyof Data;
@@ -9,13 +10,17 @@ export interface Data {
   id: string;
   title: string;
   description: string;
-  state: string;
+  status: string;
   createdAt: Date;
   edit: string;
 }
 export interface Task {
   title: string;
   description: string;
+}
+
+export interface UpdatedTask extends Task {
+  status: string;
 }
 
 export interface TableToolbarProps {
@@ -37,3 +42,15 @@ export interface EnhancedTableProps {
 }
 
 export type Order = "asc" | "desc";
+
+export type BoxRef = React.ElementRef<typeof Box>;
+export interface TaskFormProps
+  extends React.ComponentPropsWithoutRef<typeof Box> {
+  onSubmitTask: (event: React.FormEvent<HTMLFormElement>) => void;
+  taskId?: string;
+}
+
+export interface TableActionBtnProps {
+  taskId: string;
+  onEditTask: (taskId: string, updatedTask: UpdatedTask) => void;
+}
