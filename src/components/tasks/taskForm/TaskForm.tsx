@@ -17,16 +17,21 @@ import { useTaskForm } from "./useTaskForm";
 export const TaskForm = React.forwardRef<BoxRef, TaskFormProps>(
   ({ onSubmitTask, taskId, ...props }, ref) => {
     const { formValues, onFormInputChange } = useTaskForm(taskId);
-
     return (
       <Box
         sx={style}
         ref={ref}
         component="form"
         onSubmit={onSubmitTask}
+        data-testid="task-form"
         {...props}
       >
-        <Typography id="modal-modal-title" variant="h6" component="h2">
+        <Typography
+          id="modal-modal-title"
+          variant="h6"
+          component="h2"
+          data-testid="task-form-header"
+        >
           {taskId ? "Edit Task" : "Add Task"}
         </Typography>
         <TextField
@@ -37,6 +42,7 @@ export const TaskForm = React.forwardRef<BoxRef, TaskFormProps>(
           name="title"
           autoComplete="title"
           value={formValues.title}
+          data-testid="task-form-title"
           onChange={(e) => onFormInputChange("title", e.target.value)}
         />
         <TextField
@@ -47,6 +53,7 @@ export const TaskForm = React.forwardRef<BoxRef, TaskFormProps>(
           name="description"
           autoComplete="description"
           value={formValues.description}
+          data-testid="task-form-description"
           onChange={(e) => onFormInputChange("description", e.target.value)}
         />
         {taskId && (
@@ -58,6 +65,7 @@ export const TaskForm = React.forwardRef<BoxRef, TaskFormProps>(
               label="Task status"
               name="status"
               autoComplete="status"
+              data-testid="task-form-status"
               value={formValues.status}
               onChange={(e) => onFormInputChange("status", e.target.value)}
             >
@@ -66,7 +74,12 @@ export const TaskForm = React.forwardRef<BoxRef, TaskFormProps>(
             </Select>
           </FormControl>
         )}
-        <Button type="submit" variant="contained" sx={{ width: "50%" }}>
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{ width: "50%" }}
+          data-testid="task-form-submit"
+        >
           {taskId ? "Edit" : "Add"}
         </Button>
       </Box>

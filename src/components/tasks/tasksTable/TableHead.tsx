@@ -45,6 +45,7 @@ export const TableHead = (props: EnhancedTableProps) => {
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
+            data-testid={`table-header-${headCell.id}`}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
