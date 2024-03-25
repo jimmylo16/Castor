@@ -7,18 +7,29 @@ import {
 } from "firebase/auth";
 import { query, collection, where, getDocs, addDoc } from "firebase/firestore";
 import { useGlobalState } from "./useGlobalContext";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import {
+  useAuthState,
+  useSignInWithEmailAndPassword,
+} from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const googleProvider = new GoogleAuthProvider();
 
 export const useAuth = () => {
   const { setUserId } = useGlobalState();
   const navigate = useNavigate();
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
+
+  const [user, loading, error] = useAuthState(auth);
 
   const signInState = { user, loading, error };
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/signIn", { replace: true });
+    }
+  }, [loading, navigate, user]);
 
   const saveUserInDbAndContinue = async (user: User) => {
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
