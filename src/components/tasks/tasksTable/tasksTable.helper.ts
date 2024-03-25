@@ -25,6 +25,12 @@ export const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: "Creation Date",
   },
+  {
+    id: "edit",
+    numeric: true,
+    disablePadding: false,
+    label: "Edit",
+  },
 ];
 
 export function getComparator<Key extends keyof Data>(

@@ -14,6 +14,7 @@ import {
 import { useTasksTable } from "./useTasksTable";
 import { TableToolbar } from "./TableToolBar";
 import { TableHead } from "./TableHead";
+import { Edit } from "@mui/icons-material";
 export default function EnhancedTable() {
   const {
     selected,
@@ -101,6 +102,9 @@ export default function EnhancedTable() {
                       <TableCell align="right">{row.state}</TableCell>
                       <TableCell align="right">
                         {row.createdAt.toISOString()}
+                      </TableCell>
+                      <TableCell align="right">
+                        <Edit></Edit>
                       </TableCell>
                     </TableRow>
                   );

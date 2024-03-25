@@ -11,6 +11,7 @@ export interface Data {
   description: string;
   state: string;
   createdAt: Date;
+  edit: string;
 }
 export interface Task {
   title: string;

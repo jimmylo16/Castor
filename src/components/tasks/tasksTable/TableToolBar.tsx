@@ -13,20 +13,23 @@ import { Delete as DeleteIcon } from "@mui/icons-material";
 import { useState } from "react";
 import { TaskForm } from "../taskForm/TaskForm";
 
-export const TableToolbar = (props: TableToolbarProps) => {
-  const { selected, onDeleteTasks } = props;
+export const TableToolbar = ({
+  selected,
+  onDeleteTasks,
+  onAddTask,
+}: TableToolbarProps) => {
   const numSelected = selected.length;
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const onAddTask = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleOnAddTask = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const task = {
       title: data.get("title") as string,
       description: data.get("description") as string,
     };
-    props.onAddTask(task);
+    onAddTask(task);
     handleClose();
   };
 
@@ -50,7 +53,7 @@ export const TableToolbar = (props: TableToolbarProps) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <TaskForm onSubmitTask={onAddTask}></TaskForm>
+        <TaskForm onSubmitTask={handleOnAddTask}></TaskForm>
       </Modal>
       {numSelected > 0 ? (
         <Typography
