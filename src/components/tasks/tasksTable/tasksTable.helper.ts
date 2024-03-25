@@ -46,25 +46,6 @@ export function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   return 0;
 }
 
-export function createData(
-  id: string,
-  title: string,
-  description: string,
-  state: string,
-  createdAt: Date
-): Data {
-  return {
-    id,
-    title,
-    description,
-    state,
-    createdAt,
-  };
-}
-export function addMinutes(date: Date, minutes: number) {
-  return new Date(date.getTime() + minutes * 60000);
-}
-
 // Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
 // stableSort() brings sort stability to non-modern browsers (notably IE11). If you
 // only support modern browsers you can replace stableSort(exampleArray, exampleComparator)

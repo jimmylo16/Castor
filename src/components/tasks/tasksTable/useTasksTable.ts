@@ -1,29 +1,63 @@
-import React from "react";
-import {
-  stableSort,
-  getComparator,
-  addMinutes,
-  createData,
-} from "./tasksTable.helper";
-import { Order, Data } from "./tasksTable.interfaces";
+import React, { useCallback, useEffect, useState } from "react";
+import { stableSort, getComparator } from "./tasksTable.helper";
+import { Order, Data, Task } from "./tasksTable.interfaces";
 
-const rows = [
-  createData("1", "Cupcake", "cupacasdasdasd", "pending", new Date()),
-  createData(
-    "2",
-    "Donute",
-    "casdasdasd",
-    "completed",
-    addMinutes(new Date(), 60 * 24)
-  ),
-];
+import {
+  query,
+  collection,
+  where,
+  getDocs,
+  doc,
+  addDoc,
+} from "firebase/firestore";
+import { auth, db } from "../../../../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export const useTasksTable = () => {
-  const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof Data>("createdAt");
-  const [selected, setSelected] = React.useState<readonly string[]>([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<keyof Data>("createdAt");
+  const [selected, setSelected] = useState<readonly string[]>([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rows, setRows] = useState<Data[]>([]);
+  const [user] = useAuthState(auth);
+  const [loading, setLoading] = useState(false);
+
+  const onAddTask = async (task: Task) => {
+    setLoading(true);
+    const userDoc = doc(db, "users", user?.uid as string);
+    await addDoc(collection(db, "tasks"), {
+      title: task.title,
+      description: task.description,
+      status: "pending",
+      user: userDoc,
+      createdAt: new Date(),
+    });
+    await fetchTasks();
+  };
+
+  const fetchTasks = useCallback(async () => {
+    setLoading(true);
+    const userDoc = doc(db, "users", user?.uid as string);
+    const q = query(collection(db, "tasks"), where("user", "==", userDoc));
+    const docs = await getDocs(q);
+    const tasks: Data[] = docs.docs.map((doc) => {
+      const task = doc.data();
+      return {
+        id: doc.id,
+        title: task.title,
+        description: task.description,
+        state: task.status,
+        createdAt: task.createdAt.toDate(),
+      };
+    });
+    setRows(tasks);
+    setLoading(false);
+  }, [user?.uid]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
 
   const handleRequestSort = (
     _event: React.MouseEvent<unknown>,
@@ -85,7 +119,7 @@ export const useTasksTable = () => {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       ),
-    [order, orderBy, page, rowsPerPage]
+    [order, orderBy, page, rows, rowsPerPage]
   );
 
   return {
@@ -103,5 +137,7 @@ export const useTasksTable = () => {
     emptyRows,
     visibleRows,
     rows,
+    onAddTask,
+    loading,
   };
 };

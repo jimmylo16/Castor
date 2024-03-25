@@ -8,6 +8,7 @@ import {
   Table,
   TableBody,
   TablePagination,
+  CircularProgress,
 } from "@mui/material";
 
 import { useTasksTable } from "./useTasksTable";
@@ -29,11 +30,13 @@ export default function EnhancedTable() {
     page,
     handleChangePage,
     handleChangeRowsPerPage,
+    onAddTask,
+    loading,
   } = useTasksTable();
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <TableToolbar numSelected={selected.length} />
+        <TableToolbar numSelected={selected.length} onAddTask={onAddTask} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -48,47 +51,56 @@ export default function EnhancedTable() {
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
-            <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
+            <TableBody style={{ textAlign: "center" }}>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={6} style={{ textAlign: "center" }}>
+                    <CircularProgress />
+                  </TableCell>
+                </TableRow>
+              ) : (
+                visibleRows.length > 0 &&
+                visibleRows.map((row, index) => {
+                  const isItemSelected = isSelected(row.id);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
+                  return (
+                    <TableRow
+                      hover
+                      onClick={(event) => handleClick(event, row.id)}
+                      role="checkbox"
+                      aria-checked={isItemSelected}
+                      tabIndex={-1}
+                      key={row.id}
+                      selected={isItemSelected}
+                      sx={{ cursor: "pointer" }}
                     >
-                      {row.title}
-                    </TableCell>
-                    <TableCell align="right">{row.description}</TableCell>
-                    <TableCell align="right">{row.state}</TableCell>
-                    <TableCell align="right">
-                      {row.createdAt.toISOString()}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{
+                            "aria-labelledby": labelId,
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        id={labelId}
+                        scope="row"
+                        padding="none"
+                      >
+                        {row.title}
+                      </TableCell>
+                      <TableCell align="right">{row.description}</TableCell>
+                      <TableCell align="right">{row.state}</TableCell>
+                      <TableCell align="right">
+                        {row.createdAt.toISOString()}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
               {emptyRows > 0 && (
                 <TableRow
                   style={{

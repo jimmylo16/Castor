@@ -12,9 +12,14 @@ export interface Data {
   state: string;
   createdAt: Date;
 }
+export interface Task {
+  title: string;
+  description: string;
+}
 
 export interface TableToolbarProps {
   numSelected: number;
+  onAddTask: (task: Task) => void;
 }
 
 export interface EnhancedTableProps {
