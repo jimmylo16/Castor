@@ -35,3 +35,39 @@ pnpm dev
 $ npm run test
 
 ```
+
+## Folder Structure
+
+```bash
+.
+└── src/
+    ├── assets/
+    ├── components/
+    │   ├── shared/
+    │   │   ├── *.tsx
+    │   │   └── ...
+    │   ├── **/
+    │   │   ├── *.tsx
+    │   │   ├── *.test.tsx
+    │   │   ├── use*.tsx
+    │   │   ├── *.helper.tsx
+    │   │   ├── *.interface.tsx
+    │   │   └── ...
+    │   └── svg/
+    │       ├── *.tsx
+    │       └── ...
+    ├── hooks/
+    │   ├── use*.tsx
+    │   └── ...
+    ├── interfaces/
+    │   ├── common.d.ts
+    │   ├── ...
+    ├── routes/
+    │   ├── App.tsx
+    │   ├── ...
+    ├── services
+    │   ├── *.service.tsx
+    ├── App.css
+    ├── main.tsx
+    └── ...configuration files
+```
