@@ -75,7 +75,6 @@ export const TableToolbar = ({
           <Button type="submit" variant="contained" onClick={handleOpen}>
             Add Task
           </Button>
-          <span>Filter</span>
         </Box>
       )}
       {numSelected > 0 && (

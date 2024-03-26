@@ -11,7 +11,7 @@ import {
   useAuthState,
   useSignInWithEmailAndPassword,
 } from "react-firebase-hooks/auth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 const googleProvider = new GoogleAuthProvider();
@@ -19,6 +19,7 @@ const googleProvider = new GoogleAuthProvider();
 export const useAuth = () => {
   const { setUserId } = useGlobalState();
   const navigate = useNavigate();
+  const location = useLocation();
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
 
   const [user, loading, error] = useAuthState(auth);
@@ -26,10 +27,10 @@ export const useAuth = () => {
   const signInState = { user, loading, error };
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !user && location.pathname !== "/signUp") {
       navigate("/signIn", { replace: true });
     }
-  }, [loading, navigate, user]);
+  }, [loading, navigate, user, location]);
 
   const saveUserInDbAndContinue = async (user: User) => {
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
